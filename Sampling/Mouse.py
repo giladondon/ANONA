@@ -63,15 +63,15 @@ def mouse_distance_over_time(time_range):
     :type return: double
     """
     timer_end = time() + time_range
-    crusor_pos = GetCursorPos()
+    cursor = GetCursorPos()
     distance = 0
 
     while time() < timer_end:
-        if GetCursorPos() != crusor_pos:
-            x_delta = (crusor_pos[0] - GetCursorPos()[0])
-            y_delta = (crusor_pos[1] - GetCursorPos()[1])
+        if GetCursorPos() != cursor:
+            x_delta = (cursor[0] - GetCursorPos()[0])
+            y_delta = (cursor[1] - GetCursorPos()[1])
             distance += sqrt(pow(x_delta, 2) + pow(y_delta, 2))
-            crusor_pos = GetCursorPos()
+            cursor = GetCursorPos()
 
     return distance
 
@@ -106,7 +106,7 @@ def mouse_speed_avg_over_time(time_range):
 
 
 def main():
-    print mouse_speed_avg_over_time(10)
+    pass
 
 if __name__ == 'main':
     main()
