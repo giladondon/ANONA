@@ -10,22 +10,26 @@
 """
 
 # -------------- IMPORTS & SETTINGS ----------------
-from time import time
+from time import time, gmtime, strftime
 import Mouse
 from multiprocessing.pool import ThreadPool
+import numpy as np
 # --------------------------------------------------
 
 # --------------- CONSTANTS ------------------------
 SAMPLES = {"Mouse Speed": Mouse.MouseSpeedAverageOverTime(),
-           "Mouse Clicks Count": Mouse.CountClicksOverTime(),
+           "Mouse Left Clicks Count": Mouse.CountLeftClicksOverTime(),
+           "Mouse Right Clicks Count": Mouse.CountRightClicksOverTime(),
            "Mouse Distance Covered": Mouse.MouseDistanceOverTime()}
 
+ROOT_FOR_SAMPLE_FILE = "D:\\sampling-for-anona.txt"
 TIME_RANGE_FOR_CLASS = 60*2
 TIME_RANGE_FOR_SAMPLE = 10
 MOUSE_SPEED = "Mouse Speed"
 MOUSE_CLICKS = "Mouse Clicks Count"
 MOUSE_DISTANCE = "Mouse Distance Covered"
 VALID = True
+UNWANTED_CHARS = "'"": "
 # --------------------------------------------------
 
 # --------------- CLASS ----------------------------
@@ -38,11 +42,10 @@ class Sample:
         :type sampling_dict: dict
         """
         self.sampling_dict = sampling_dict
-        self.time_stamp = time()
+        self.time_stamp = strftime("%Y %H:%M:%S", gmtime())
 
     def is_valid(self):
         for aspect in self.sampling_dict.keys():
-            print self.sampling_dict[aspect]
             if not SAMPLES[aspect].is_valid(self.sampling_dict[aspect]):
                 return SAMPLES[aspect].is_valid(self.sampling_dict[aspect])
 
@@ -85,15 +88,26 @@ def make_sets_class(time_range):
 
     while time() < timer_ends:
         current_sample = generate_sample(manage_threads(TIME_RANGE_FOR_SAMPLE, SAMPLES))
-        print current_sample.sampling_dict
         if current_sample.is_valid():
             samples.append(current_sample)
 
     return samples
 
 
+def parse_samples_numpy(samples_file_handle):
+    """
+    :param samples_file_handle: file handle for txt sampling file
+    :type samples_file_handle: file - txt, open for reading
+    """
+
+
 def main():
-    print make_sets_class(TIME_RANGE_FOR_CLASS)
+    f = open(ROOT_FOR_SAMPLE_FILE, "w")
+    dataset = make_sets_class(20)
+    for sample in dataset:
+        f.write(str(sample.sampling_dict) + "  :  " + str(sample.time_stamp) + "\n")
+
+    f.close()
 
 # --------------------------------------------------
 
