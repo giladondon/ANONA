@@ -28,9 +28,7 @@ from math import sqrt, pow
 # --------------------------------------------------
 
 # -------------- FUNCTIONS -------------------------
-
-
-class CountClicksOverTime:
+class CountRightClicksOverTime:
 
     def __init__(self):
         self.result = 0
@@ -42,22 +40,45 @@ class CountClicksOverTime:
         :return right_clicks, left_clicks: count of clicks
         :type return: tuple of int
         """
-        right_clicks = 0
-        left_clicks = 0
+        clicks = 0
         state_right = GetKeyState(RIGHT_MOUSE_ID)
+        timer_end = time() + time_range
+        while time() < timer_end:
+            if GetKeyState(RIGHT_MOUSE_ID) != state_right:
+                if state_right < 0:
+                    clicks += 1
+                state_right = GetKeyState(RIGHT_MOUSE_ID)
+
+        self.result = clicks
+        return self.result
+
+    @staticmethod
+    def is_valid(result):
+        return True
+
+
+class CountLeftClicksOverTime:
+
+    def __init__(self):
+        self.result = 0
+
+    def execute(self, time_range):
+        """
+        :param time_range: time_range in seconds
+        :type time_range: int
+        :return right_clicks, left_clicks: count of clicks
+        :type return: tuple of int
+        """
+        clicks = 0
         state_left = GetKeyState(LEFT_MOUSE_ID)
         timer_end = time() + time_range
         while time() < timer_end:
             if GetKeyState(LEFT_MOUSE_ID) != state_left:
                 if state_left < 0:
-                    left_clicks += 1
+                    clicks += 1
                 state_left = GetKeyState(LEFT_MOUSE_ID)
-            elif GetKeyState(RIGHT_MOUSE_ID) != state_right:
-                if state_right < 0:
-                    right_clicks += 1
-                state_right = GetKeyState(RIGHT_MOUSE_ID)
 
-        self.result = right_clicks, left_clicks
+        self.result = clicks
         return self.result
 
     @staticmethod
