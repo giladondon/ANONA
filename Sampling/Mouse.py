@@ -133,6 +133,7 @@ class MouseSpeedAverageOverTime:
         movement_timer = time()
 
         timer_ends = time() + time_range
+        start_pos = GetCursorPos()
         cursor_pos = GetCursorPos()
         while time() < timer_ends:
             if cursor_pos != GetCursorPos():
@@ -141,6 +142,8 @@ class MouseSpeedAverageOverTime:
                 speeds_sum += time() - movement_timer
                 movements_count += 1
 
+        if start_pos == GetCursorPos():
+            return 0
         self.result = speeds_sum / movements_count
         return self.result
 
