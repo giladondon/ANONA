@@ -12,6 +12,9 @@
 # --------------- CONSTANTS ------------------------
 IP = "0.0.0.0"
 PORT = 555
+DATABASE_NAME = "Anona-Database"
+COLLECTION_NAME = "anona users"
+DATABASE_PORT = 556
 MAXIMUM_LISTEN = 1
 REGISTER_HEADER = "SIGN"
 VALID_SAMPLE_HEADER = "SMPT"
@@ -27,12 +30,13 @@ from socket import socket, error
 from thread import start_new_thread
 from Sample import *
 from pickle import dumps, loads
+from pymongo import MongoClient
 # --------------------------------------------------
 
 # -------------- FUNCTIONS -------------------------
 
 
-def client_approach(conn):
+def client_approach(conn, db):
     """
     :param conn: socket to anona client, for thread use
     :type conn: _socketobject
@@ -57,7 +61,7 @@ def client_approach(conn):
             if anona_client_data[0] == NEW_SAMPLE_HEADER:
                 pass
 
-            if anona_client_data[0] == NEW_SAMPLE_HEADER:
+            if anona_client_data[0] == LOG_OUT_HEADER:
                 conn.close()
 
 
@@ -123,7 +127,9 @@ def main():
     while True:
         anona_connect.listen(MAXIMUM_LISTEN)
         client_conn, client_address = anona_connect.accept()
-        start_new_thread(client_approach, (client_conn,))
+        mongo_database = MongoClient(DATABASE_NAME, DATABASE_PORT)
+        anona_users_database = mongo_database[COLLECTION_NAME]
+        start_new_thread(client_approach, (client_conn, anona_users_database))
 
     anona_connect.close()
 

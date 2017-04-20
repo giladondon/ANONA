@@ -151,6 +151,28 @@ class MouseSpeedAverageOverTime:
     def is_valid(result):
         return result > 0
 
+
+def mouse_speed_avg_over_time(time_range):
+    """
+    :param time_range: time range in seconds
+    :type time_range: int
+    :return speeds average: averages of mouse speeds over time
+    """
+    movements_count = 0
+    speeds_sum = 0
+    movement_timer = time()
+
+    timer_ends = time() + time_range
+    cursor_pos = GetCursorPos()
+    while time() < timer_ends:
+        if cursor_pos != GetCursorPos():
+            movement_timer = time()
+        if cursor_pos == GetCursorPos():
+            speeds_sum += time() - movement_timer
+            movements_count += 1
+
+    return speeds_sum / movements_count
+
 # --------------------------------------------------
 
 # --------------- CLASS ----------------------------
@@ -160,7 +182,7 @@ class MouseSpeedAverageOverTime:
 
 
 def main():
-    pass
+    print mouse_speed_avg_over_time(10)
 
 if __name__ == 'main':
     main()
