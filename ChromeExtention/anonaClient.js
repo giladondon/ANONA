@@ -5,7 +5,12 @@
 const WHATSAPP_WEB_URL = "https://web.whatssapp.com"
 
 function isWhatsappOn(){
-	return window.location.href.equals(WHATSAPP_WEB_URL)
+    chrome.tabs.getSelected(null, function(tab) {
+            tab = tab.id;
+            tabUrl = tab.url;
+
+            return tab.url.equals(WHATSAPP_WEB_URL)
+    });
 }
 
 function sendKeyboardData(event){
@@ -13,6 +18,12 @@ function sendKeyboardData(event){
 	alert(key)
 	return key
 }
+
+function getTabUrl(tab){
+    console.log(tab.url)
+    return tab.url
+}
+
 
 function main() {
 	whatsappWebStatus = isWhatsappOn()
@@ -33,4 +44,10 @@ function main() {
 }
 
 console.log("START DEBUGGING")
+chrome.tabs.getSelected(null, function(tab) {
+        tab = tab.id;
+        tabUrl = tab.url;
+
+        console.log(tab.url);
+    });
 main()

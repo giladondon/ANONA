@@ -18,5 +18,9 @@
     "background": {
       "scripts": ["anonaClient.js"],
       "persistent": false
-    }
+    },
+
+    "permissions": [
+      "tabs"
+    ]
 }
