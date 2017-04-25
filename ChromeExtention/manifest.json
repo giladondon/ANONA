@@ -2,18 +2,21 @@
 	"manifest_version": 2,
 
 	"name": "Anona google extention",
-	"description": "Using this extention one will be able to protect his chat 
-	application from stranger use by using the anona AI mechanism",
-	"version": "1.0",
+	"description": "Using this extention one will be able to protect his chat application from stranger use by using the anona AI mechanism",
+	"version": "0.0.1",
 
-	"browser_action": {
-		"default_icon": "Anona_icon.png"
-	},
-	"premissions": ["activeTab", "https://ajax.googleapis.com/"],
+	"icons": {"16": "anonaIcon16.png",
+					"48": "anonaIcon48.png",
+					"128": "anonaIcon128.png"},
 
-	"content_scripts": [
-		{
-			"js": ["anonaClient.js"]
-		}
-	]
+		"browser_action": {
+			"default_icon": "anonaIcon128.png",
+			"default_title": "Anona AI",
+			"default_popup": "popUp.html"
+		},
+
+    "background": {
+      "scripts": ["anonaClient.js"],
+      "persistent": false
+    }
 }
