@@ -14,13 +14,16 @@
 			"default_title": "Anona AI",
 			"default_popup": "popUp.html"
 		},
-
-    "background": {
-      "scripts": ["anonaClient.js"],
-      "persistent": false
-    },
-
+	
+	"content_scripts": [
+    {
+        "matches": ["https://web.whatsapp.com/"],
+        "js": ["anonaClient.js"]
+    }
+],
+	
     "permissions": [
-      "tabs"
+      "input",
+	  "tabs"
     ]
 }
