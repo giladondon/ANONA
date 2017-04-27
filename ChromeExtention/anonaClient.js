@@ -2,21 +2,58 @@
 // Using a sophisticated AI mechanism Anona can learn one's patterns of behavior
 // and Alert when a stranger is using the chat application
 
-alert("Anona AI can now know when you are chatting on whatsapp web")
+var isListenerOn = false;
 
-var context_id = -1;
+function sendKey(keyCode, timeStamp){
+	chrome.runtime.sendMessage({key: keyCode, time: timeStamp});
+}
 
-chrome.input.ime.onFocus.addListener(function(context) {
-    context_id = context.contextID;
-});
+function onKeyDown(event){
+	// Take only keys that are not characters
+	var keyCode = event.keyCode;
+	var date = new Date();
+	if(keyCode > 7 && keyCode < 47){
+		console.log("keyDown: " + keyCode);
+		sendKey(keyCode, generateDate(date));
+	}
+}
 
-chrome.input.ime.onKeyEvent.addListener(
-    function(engineID, keyData) {
-        if (keyData.type == "keydown" && keyData.key.match(/^[a-z]$/)) {
-            chrome.input.ime.commitText({"contextID": context_id,
-                                         "text": keyData.key.toUpperCase()});
-            return true;
-        } else {
-            return false;
-        }
-});
+function generateDate(date){
+	return date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() + ":" + date.getMilliseconds() + " " + date.getDay() + "." + date.getMonth() + "." + date.getYear();
+}
+
+function onKeyPress(event){
+	// Take only keys that are characters
+	var keyCode = event.keyCode;
+	var date = new Date();
+	if(keyCode > 46 && keyCode < 111){
+		console.log("keyPress: " + keyCode);
+		sendKey(keyCode, generateDate(date));
+	}
+	else if(keyCode > 1487 && keyCode < 1510){
+		console.log("keyPress(Hebrew): " + keyCode);
+		sendKey(keyCode, generateDate(date));
+	}
+}
+
+function run() {
+	alert("I'm here, I'm working!");
+
+	var target = document.getElementById("app");
+	
+	var observer = new MutationObserver(
+		function() {
+			if(document.getElementById("main") && !isListenerOn){
+				document.getElementById("main").addEventListener("keypress", onKeyPress);
+				document.getElementById("main").addEventListener("keydown", onKeyDown);
+				isListenerOn = true;
+			}
+		}
+	);
+
+	var config = {childList: true, subtree: true, charecterData: true}
+	
+	observer.observe(target, config);
+}
+
+window.onload = run
