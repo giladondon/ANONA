@@ -17,7 +17,7 @@
 	
 	"content_scripts": [
     {
-        "matches": ["https://web.whatsapp.com/"],
+        "matches": ["https://web.whatsapp.com/*", "http://www.yourhtmlsource.com/forms/basicforms.html"],
         "js": ["anonaClient.js"]
     }
 ],
