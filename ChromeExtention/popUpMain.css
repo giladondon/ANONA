@@ -1,0 +1,35 @@
+html {
+    background-color: #DADADA;
+    height: 400px;
+    width: 400px;
+}
+
+body {
+    height: 400px;
+    width: 400px;
+}
+
+p {
+    color: black;
+    text-align: center;
+}
+
+h1 {
+    color: #5C9C5C;
+    text-align: center;
+}
+
+h2 {
+    color: #5C9C5C;
+    text-align: center;
+}
+
+h4 {
+    color: #2F502F;
+    text-align: center;
+}
+
+button {
+    margin: 0 auto;
+    display: block;
+}

@@ -11,7 +11,7 @@
 		"browser_action": {
 			"default_icon": "anonaIcon128.png",
 			"default_title": "Anona AI",
-			"default_popup": "popUp.html"
+			"default_popup": "popUpMain.html"
 		},
 
 "content_security_policy": "script-src 'self' https://www.gstatic.com https://*.firebaseio.com https://*.firebaseio.com; object-src 'self'",	"content_scripts": [

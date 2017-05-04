@@ -37,7 +37,6 @@ function onKeyPress(event){
 }
 
 function run() {
-    alert(chrome.identity.getAuthToken())
 	var target = document.getElementById("app");
 	
 	var observer = new MutationObserver(
