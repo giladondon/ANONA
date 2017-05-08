@@ -14,13 +14,24 @@ const config = {
   };
 
 const FIREBASEANONA = firebase.initializeApp(config);
-var isSignedIn = false
 
-function writeClientData(key, time){
+function writeClientData(key, time) {
     FIREBASEANONA.database().ref().set({
         keyCode: key,
         timeStamp: time
     })
+}
+
+function checkUserExistance(userName) {
+    
+}
+
+function onSignIn(request){
+	firebase.auth().signInWithEmailAndPassword(request.email, request.password);
+}
+
+function onSignUp(request){
+	firebase.auth().createUserWithEmailAndPassword(request.email, request.password);
 }
 
 function onMessage(request, sender){
@@ -30,23 +41,17 @@ function onMessage(request, sender){
 	}
 	else{
 		if(request.action == SIGN_IN_ACTION){
-			isSignedIn = true;
-			firebase.auth().signInWithEmailAndPassword(request.email, request.password);
-			var userKey = FIREBASEANONA.database().ref("users").push()
-			userKey.set({
-				email: request.email,
-				password: request.password
-			});
-			alert(userKey);
-			userKey = userKey.substring(userKey.lastIndexOf("/-"));
-			alert(userKey);
+		    isSignedIn = true;
+			onSignIn(request);
 		}
 		if(request.action == SIGN_UP_ACTION){
-			isSignedIn = true;
-			firebase.auth().createUserWithEmailAndPassword(request.email, request.password);
+		    isSignedIn = true;
+			onSignUp(request)
 		}
 		
 	}
 }
+
+var isSignedIn = false
 
 chrome.runtime.onMessage.addListener(onMessage);
