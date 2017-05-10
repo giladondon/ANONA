@@ -23,39 +23,35 @@ function writeClientData(key, time, databaseKey) {
     });
 }
 
-function onSignIn(request){
-	firebase.auth().signInWithEmailAndPassword(request.email, request.password);
-}
-
-function onSignUp(request){
-    firebase.auth().createUserWithEmailAndPassword(request.email, request.password);
+function onSignError(error) {
+    alert(error.message);
 }
 
 function updateDatabase(request){
     var email = request.email, password = request.password,
         key = email.substr(0, email.indexOf('@'));
     // Set database Users/[username] without @-- with password.
-    FIREBASEANONA.database().ref('users/' + key).set({
+    FIREBASEANONA.database().ref('users/' + key).update({
         email: email,
-        password: password,
-        keys: {}
+        password: password
     });
     
-    alert("key = " + key);
     return key;
 }
 
 function onMessage(request, sender){
     if(!isSignedIn){
         if(request.action == SIGN_IN_ACTION){
-            isSignedIn = true;
-			onSignIn(request);
-            databaseKey = updateDatabase(request);
+            firebase.auth().signInWithEmailAndPassword(request.email, request.password).then(function () {
+                isSignedIn = true;
+                databaseKey = updateDatabase(request);
+            }).catch(onSignError);
 		}
 		if(request.action == SIGN_UP_ACTION){
-            isSignedIn = true;
-			onSignUp(request)
-            databaseKey = updateDatabase(request);
+            firebase.auth().createUserWithEmailAndPassword(request.email, request.password).then(function (user) {
+                isSignedIn = true;
+                databaseKey = updateDatabase(request);
+            }).catch(onSignError)
 		}
     }
 	else {
