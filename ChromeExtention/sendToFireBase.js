@@ -3,6 +3,7 @@
 const WHATSAPP_WEB = "https://web.whatsapp.com/"
 const SIGN_IN_ACTION = "SIGNIN"
 const SIGN_UP_ACTION = "SIGNUP"
+const SIGN_OUT_ACTION = "SIGNOUT"
 
 const config = {
     apiKey: "AIzaSyABnZ9KDeJiJxqswHy7rJqVhP5Qu5DOxRo",
@@ -45,12 +46,20 @@ function onMessage(request, sender){
             firebase.auth().signInWithEmailAndPassword(request.email, request.password).then(function () {
                 isSignedIn = true;
                 databaseKey = updateDatabase(request);
+                alert("successfully signed in!")
+                chrome.browserAction.setPopup({
+                    popup: "signedIn.html"
+                });
             }).catch(onSignError);
 		}
 		if(request.action == SIGN_UP_ACTION){
             firebase.auth().createUserWithEmailAndPassword(request.email, request.password).then(function (user) {
                 isSignedIn = true;
                 databaseKey = updateDatabase(request);
+                alert("successfully signed up!")
+                chrome.browserAction.setPopup({
+                    popup: "signedIn.html"
+                });
             }).catch(onSignError)
 		}
     }
@@ -58,6 +67,14 @@ function onMessage(request, sender){
         if(sender.url == WHATSAPP_WEB && isSignedIn){
             console.log(request.key + "- " + request.time);
             writeClientData(request.key, request.time, databaseKey);
+        }
+        if (request.action == SIGN_OUT_ACTION){
+            firebase.auth().signOut().then(function() {
+                alert("Signed Out Successfully!");
+                chrome.browserAction.setPopup({
+                    popup: "popUpMain.html"
+                });
+            });
         }
     }
 }
