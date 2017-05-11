@@ -1,9 +1,9 @@
 {
 	"manifest_version": 2,
 
-	"name": "Anona google extention",
+	"name": "Anona AI",
 	"description": "Using this extension one will be able to protect his chat application from stranger use by using the anona AI mechanism",
-	"version": "0.0.1",
+	"version": "0.0.3",
 	"icons": {"16": "anonaIcon16.png",
 					"48": "anonaIcon48.png",
 					"128": "anonaIcon128.png"},

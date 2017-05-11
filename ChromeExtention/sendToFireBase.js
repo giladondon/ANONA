@@ -28,9 +28,23 @@ function onSignError(error) {
     alert(error.message);
 }
 
+function clearKey (key){
+    key = key.replace(".", "");
+    key = key.replace("?", "");
+    key = key.replace("!", "");
+    key = key.replace("/", "");
+    key = key.replace("\\", "");
+    key = key.replace("$", "");
+    key = key.replace("#", "");
+    key = key.replace("%", "");
+    
+    return key;
+}
+
 function updateDatabase(request){
     var email = request.email, password = request.password,
-        key = email.substr(0, email.indexOf('@'));
+        key = email.substr(0, email.indexOf('@')).toLocaleLowerCase();
+    key = clearKey(key);
     // Set database Users/[username] without @-- with password.
     FIREBASEANONA.database().ref('users/' + key).update({
         email: email,
@@ -48,7 +62,7 @@ function onMessage(request, sender){
                 databaseKey = updateDatabase(request);
                 alert("successfully signed in!")
                 chrome.browserAction.setPopup({
-                    popup: "signedIn.html"
+                    popup: "signOutPage.html"
                 });
             }).catch(onSignError);
 		}
@@ -58,7 +72,7 @@ function onMessage(request, sender){
                 databaseKey = updateDatabase(request);
                 alert("successfully signed up!")
                 chrome.browserAction.setPopup({
-                    popup: "signedIn.html"
+                    popup: "signOutPage.html"
                 });
             }).catch(onSignError)
 		}
@@ -71,6 +85,7 @@ function onMessage(request, sender){
         if (request.action == SIGN_OUT_ACTION){
             firebase.auth().signOut().then(function() {
                 alert("Signed Out Successfully!");
+                isSignedIn = false;
                 chrome.browserAction.setPopup({
                     popup: "popUpMain.html"
                 });
