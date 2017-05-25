@@ -16,7 +16,7 @@ function onKeyDown(event) {
 }
 
 function generateDate(date) {
-	return date.getHours() + " " + date.getMinutes() + " " + date.getSeconds() + " " + date.getMilliseconds() + " " + date.getDay() + " " + date.getMonth() + " " + date.getYear();
+	return date.getHours() + " " + date.getMinutes() + " " + date.getSeconds() + " " + date.getMilliseconds() + " " + date.getDate() + " " + (date.getMonth()+1) + " " + date.getFullYear();
 }
 
 function onKeyPress(event) {
