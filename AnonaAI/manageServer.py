@@ -21,9 +21,7 @@ DATABASE_URL = "https://anona-dd0ad.firebaseio.com"
 STORAGE_BUCKET = "anona-dd0ad.appspot.com"
 SERVICE_ACCOUNT = "C:\Heights\Documents\Projects\\anonaAiProj\AnonaAI\\anona-dd0ad-firebase-adminsdk-xzzb7-41f8da447b.json"
 
-
 import pyrebase
-import thread
 
 
 def set_up_firebase():
