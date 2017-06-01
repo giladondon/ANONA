@@ -73,6 +73,7 @@ def read_file(path):
             if sample[0] != 0:
                 output.append(sample)
 
+    print output
     return np.array(output)
 
 def add_features(samples):
@@ -125,7 +126,7 @@ def run_nn_solution(input_positive_samples, input_negative_samples):
     print 'negative results :'
     print model.predict_proba(negative_samples_test)
 
-input_positive_samples = read_file('/temp/positive_keys.txt')
+input_positive_samples = read_file('test.txt')
 input_negative_samples = read_file('/temp/negative_keys.txt')
 
 input_positive_samples = input_positive_samples[input_positive_samples[:,0] < 15000]

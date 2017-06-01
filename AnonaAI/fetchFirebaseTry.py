@@ -13,7 +13,7 @@ config = {
 
 firebase = pyrebase.initialize_app(config)
 db = firebase.database()
-user = db.child("users").child("ayadrori7")
+user = db.child("users").child("giladondon")
 keys = user.child("keys").get()
 parsed = {}
 for key in keys.each():
@@ -44,6 +44,51 @@ for item in od:
         count = 0
 
 print(deltas)
+
+backspace_ratio = []
+
+key_count = 0
+backspace_count = 0
+
+for item in od:
+    key_count += 1
+    if od[item] == 13:
+        backspace_ratio.append([backspace_count, key_count])
+        key_count = 0
+        backspace_count = 0
+    elif od[item] == 8:
+        backspace_count += 1
+
+print(backspace_ratio)
+
+language_shift_ratio = []
+
+key_count = 0
+language_shift_count = 0
+suspect_shift = False, 0
+
+for item in od:
+    key_count += 1
+
+    if od[item] == 18 or od[item] == 16:
+        print od[item]
+        if suspect_shift[0]:
+            if suspect_shift[1] != od[item]:
+                language_shift_count += 1
+                suspect_shift = False, 0
+        else:
+            suspect_shift = True, od[item]
+
+    if od[item] == 13:
+        language_shift_ratio.append([language_shift_count, key_count])
+        key_count = 0
+        language_shift_count = 0
+
+print language_shift_ratio
+
+print len(backspace_ratio)
+print len(deltas)
+print len(language_shift_ratio)
 
 thefile = open('test.txt', 'w')
 for item in deltas:
