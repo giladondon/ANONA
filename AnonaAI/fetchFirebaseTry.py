@@ -18,11 +18,16 @@ keys = user.child("keys").get()
 parsed = {}
 for key in keys.each():
     values = key.key().split(" ")
-    values[4] = str(int(values[4]) + 1)
-    values[6] = 2017
-    ts = [ values[6], values[5], values[4], values[0], values[1], values[2], str(int(values[3])*1000) ]
-    newdate = datetime.datetime(*map(int, ts))
-    parsed[newdate] = key.val()
+    if len(values[6]) != 4:
+        values[4] = str(int(values[4]) + 1)
+        values[6] = 2017
+        ts = [values[6], values[5], values[4], values[0], values[1], values[2], str(int(values[3])*1000)]
+        newdate = datetime.datetime(*map(int, ts))
+        parsed[newdate] = key.val()
+    elif len(values[6]) == 4:
+        ts = [values[6], values[5], values[4], values[0], values[1], values[2], str(int(values[3])*1000)]
+        newdate = datetime.datetime(*map(int, ts))
+        parsed[newdate] = key.val()
 
 od = collections.OrderedDict(sorted(parsed.items()))
 
@@ -71,7 +76,6 @@ for item in od:
     key_count += 1
 
     if od[item] == 18 or od[item] == 16:
-        print od[item]
         if suspect_shift[0]:
             if suspect_shift[1] != od[item]:
                 language_shift_count += 1
@@ -86,9 +90,30 @@ for item in od:
 
 print language_shift_ratio
 
+punctuation_ratio = []
+
+punctuation_count = 0
+key_count = 0
+
+PUNCTUATION_CODES = range(33, 48) + range(58, 65) + range(91, 97) + range(123, 154)
+
+for item in od:
+    key_count += 1
+
+    if od[item] in PUNCTUATION_CODES:
+        punctuation_count += 1
+
+    if od[item] == 13:
+        punctuation_ratio.append([punctuation_count, key_count])
+        key_count = 0
+        punctuation_count = 0
+
+print punctuation_ratio
+
 print len(backspace_ratio)
 print len(deltas)
 print len(language_shift_ratio)
+print len(punctuation_ratio)
 
 thefile = open('test.txt', 'w')
 for item in deltas:

@@ -4,6 +4,8 @@ ENTER_KEY_CODE = 13
 BACKSPACE_KEY_CODE = 8
 ALT_KEY_CODE = 18
 SHIFT_KEY_CODE = 16
+PUNCTUATION_CODES = range(33, 48) + range(58, 65) + range(91, 97) + range(123, 154)
+
 
 class FeatureGen(object):
     def __init__(self):
@@ -88,4 +90,27 @@ class FeatureGen(object):
 
         return language_shift_ratio
 
+    @staticmethod
+    def punctuation_marks(od):
+        """
+        :param od: key data of user ending with enter(key code 13).
+        :return: 
+        :type od: ordered dictionary
+        """
+        punctuation_ratio = []
 
+        punctuation_count = 0
+        key_count = 0
+
+        for item in od:
+            key_count += 1
+
+            if od[item] in PUNCTUATION_CODES:
+                punctuation_count += 1
+
+            if od[item] == ENTER_KEY_CODE:
+                punctuation_ratio.append([punctuation_count, key_count])
+                key_count = 0
+                punctuation_count = 0
+
+        return punctuation_ratio
