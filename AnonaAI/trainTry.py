@@ -126,8 +126,8 @@ def run_nn_solution(input_positive_samples, input_negative_samples):
     print 'negative results :'
     print model.predict_proba(negative_samples_test)
 
-input_positive_samples = read_file('test.txt')
-input_negative_samples = read_file('/temp/negative_keys.txt')
+input_positive_samples = read_file('positive.txt')
+input_negative_samples = read_file('negative.txt')
 
 input_positive_samples = input_positive_samples[input_positive_samples[:,0] < 15000]
 input_negative_samples = input_negative_samples[input_negative_samples[:,0] < 15000]
