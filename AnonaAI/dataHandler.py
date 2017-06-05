@@ -3,6 +3,7 @@ import datetime
 import collections
 
 __author__ = 'Gilad Barak'
+__name__ = "main"
 
 
 class DataHandler(object):
@@ -10,6 +11,8 @@ class DataHandler(object):
         firebase = pyrebase.initialize_app(config)
         self.db = firebase.database()
         self.user = user_name
+        self.new_samples = {}
+        self.data_stream = None
 
     @staticmethod
     def generate_date(values):
@@ -45,5 +48,27 @@ class DataHandler(object):
 
         return collections.OrderedDict(sorted(parsed.items()))
 
+    def stream_handler(self, message):
+        try:
+            self.new_samples[message["data"].key()] = message["data"].val()
+        except AttributeError:
+            pass
+        finally:
+            print message["data"]
+
     def stream_data(self):
-        pass
+        self.data_stream = self.db.child(self.user + "/keys").stream(self.stream_handler)
+
+
+if __name__ == "main":
+    config = {
+    "apiKey": "AIzaSyABnZ9KDeJiJxqswHy7rJqVhP5Qu5DOxRo",
+    "authDomain": "anona-dd0ad.firebaseapp.com",
+    "databaseURL": "https://anona-dd0ad.firebaseio.com",
+    "projectId": "anona-dd0ad",
+    "storageBucket": "anona-dd0ad.appspot.com",
+    "serviceAccount": "/Users/Giladondon/Documents/Cyber/ANONA/AnonaAI/anona-dd0ad-firebase-adminsdk-xzzb7-41f8da447b.json"
+    }
+
+    anona = DataHandler(config, "giladondon")
+    anona.stream_data()

@@ -32,6 +32,13 @@ for key in keys.each():
 od = collections.OrderedDict(sorted(parsed.items()))
 
 
+def stream_handler(message):
+    print "A"
+    print message
+
+my_stream = db.child("users/giladondon").stream(stream_handler, None)
+
+
 deltas = []
 
 is_first = True
