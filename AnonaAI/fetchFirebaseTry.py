@@ -33,10 +33,11 @@ od = collections.OrderedDict(sorted(parsed.items()))
 
 
 def stream_handler(message):
-    print "A"
-    print message
+    print(message["event"]) # put
+    print(message["path"]) # /-K7yGTTEp7O549EzTYtI
+    print(message["data"]) # {'title': 'Pyrebase', "body": "etc..."}
 
-my_stream = db.child("users/giladondon").stream(stream_handler, None)
+my_stream = db.child("users").child("giladondon").child("keys").stream(stream_handler)
 
 
 deltas = []
@@ -47,6 +48,7 @@ count = 0
 
 for item in od:
     count += 1
+    print type(item)
     if is_first:
         start = item
         is_first = False

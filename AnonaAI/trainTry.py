@@ -126,25 +126,35 @@ def run_nn_solution(input_positive_samples, input_negative_samples):
     print 'negative results :'
     print model.predict_proba(negative_samples_test)
 
-input_positive_samples = read_file('positive.txt')
-input_negative_samples = read_file('negative.txt')
 
-input_positive_samples = input_positive_samples[input_positive_samples[:,0] < 15000]
-input_negative_samples = input_negative_samples[input_negative_samples[:,0] < 15000]
+def setup_graph(negative_file, positive_file, window_name):
+    input_positive_samples = read_file(positive_file)
+    input_negative_samples = read_file(negative_file)
 
-input_positive_samples = add_features(input_positive_samples)
-input_negative_samples = add_features(input_negative_samples)
+    input_positive_samples = input_positive_samples[input_positive_samples[:,0] < 15000]
+    input_negative_samples = input_negative_samples[input_negative_samples[:,0] < 15000]
 
-fig, ax = plt.subplots()
-ax.margins(0.05) # Optional, just adds 5% padding to the autoscaling
-# for name, group in groups:
+    input_positive_samples = add_features(input_positive_samples)
+    input_negative_samples = add_features(input_negative_samples)
 
-ax.plot(input_negative_samples[:,0], input_negative_samples[:,2], marker='o', color='r', linestyle='', ms=12, label="negatives")
-ax.plot(input_positive_samples[:,0], input_positive_samples[:,2], marker='o', color='g', linestyle='', ms=12, label="positives")
+    fig, ax = plt.subplots()
+    ax.margins(0.05) # Optional, just adds 5% padding to the autoscailing
+    # for name, group in groups:
 
-ax.legend()
+    ax.plot(input_negative_samples[:,0], input_negative_samples[:,2], marker='o', color='r', linestyle='', ms=12, label="negatives")
+    ax.plot(input_positive_samples[:,0], input_positive_samples[:,2], marker='o', color='g', linestyle='', ms=12, label="positives")
 
-plt.show()
+    ax.legend()
+
+    fig.canvas.set_window_title(window_name)
+
+    plt.show()
+
+setup_graph("backspace-negative.txt", "backspace-positive.txt", "Backspace Use Visual")
+
+setup_graph("punc-negative.txt", "punc-positive.txt", "Punctuation Use Visual")
+
+setup_graph("speed-negative.txt", "speed-positive.txt", "Type Pace Visual")
 
 # def twoD_Gaussian((x, y), amplitude, xo, yo, sigma_x, sigma_y, theta, offset):
 #     xo = float(xo)
